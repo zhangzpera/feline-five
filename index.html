@@ -3,55 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>万相喵 | 猫咪五大人格(Feline Five)测评</title>
+    <title>猫咪五大人格 (Feline Five) 科学测评</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        :root { --primary: #5c6bc0; --bg: #f5f7fa; }
-        body { font-family: sans-serif; background: var(--bg); margin: 0; padding: 20px; color: #333; }
-        .container { max-width: 500px; margin: 0 auto; background: #fff; padding: 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        h1 { text-align: center; color: var(--primary); font-size: 22px; }
-        .question { display: none; margin-bottom: 20px; }
-        .question.active { display: block; }
-        .options { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; }
-        button { padding: 12px; border: none; border-radius: 8px; background: #eee; cursor: pointer; transition: 0.3s; }
-        button:hover { background: var(--primary); color: #fff; }
+        :root { --primary: #455a64; --bg: #fdfdfd; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); margin: 0; padding: 20px; color: #37474f; line-height: 1.6; }
+        .container { max-width: 500px; margin: 0 auto; background: #fff; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        h1 { text-align: center; color: var(--primary); font-size: 20px; margin-bottom: 30px; }
+        .question { display: none; }
+        .question.active { display: block; animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .options { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
+        button { padding: 15px; border: 1px solid #eee; border-radius: 12px; background: #fff; cursor: pointer; transition: all 0.2s; font-size: 15px; color: #555; }
+        button:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
         #result { display: none; text-align: center; }
-        .advice-box { text-align: left; margin-top: 20px; padding: 15px; background: #f9f9f9; border-left: 4px solid var(--primary); font-size: 14px; }
+        .advice-box { text-align: left; margin-top: 25px; padding: 20px; background: #f8f9fa; border-radius: 12px; font-size: 14px; border: 1px solid #eceff1; }
+        .source-ref { font-size: 11px; color: #90a4ae; margin-top: 20px; text-align: center; border-top: 1px solid #eee; padding-top: 15px; }
+        canvas { margin-top: 20px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>🐱 猫咪人格雷达测试</h1>
+    <h1>猫咪行为与人格科学测评</h1>
     <div id="quiz-container">
         </div>
     
     <div id="result">
-        <h3>测试完成！这是你家猫的性格轮廓：</h3>
+        <h3>测评结果：猫咪人格维度图</h3>
         <canvas id="radarChart"></canvas>
         <div id="advice" class="advice-box"></div>
-        <button onclick="location.reload()" style="margin-top:20px; background:var(--primary); color:#fff;">重新测评</button>
+        <button onclick="location.reload()" style="margin-top:20px; width:100%; background:var(--primary); color:#fff;">重新开始测评</button>
+        <div class="source-ref">
+            数据来源：Litchfield 等 (2017) 《“猫咪五大人格”：宠物猫人格探索》<br>
+            基于 2,802 只宠物猫的样本研究确立
+        </div>
     </div>
 </div>
 
 <script>
-// 基于论文研究选取的15个代表性问题 [cite: 134, 137]
+// 基于论文中提到的 52 项特质精选的 15 道代表性题目
 const questions = [
-    { text: "1. 你的猫是否容易被突然的声音吓到？", dim: "N" }, // Neuroticism
-    { text: "2. 你的猫在生人面前是否表现得非常害羞？", dim: "N" },
-    { text: "3. 你的猫是否经常表现出焦虑或紧张？", dim: "N" },
-    { text: "4. 你的猫是否热衷于探索家里新出现的盒子？", dim: "E" }, // Extraversion
-    { text: "5. 你的猫是否显得非常聪明、有主见？", dim: "E" },
-    { text: "6. 你的猫在玩耍时是否表现得非常活跃？", dim: "E" },
-    { text: "7. 在多猫环境下，它是否会驱赶或欺负别的猫？", dim: "D" }, // Dominance
-    { text: "8. 你的猫在面对食物时是否表现得很强势（护食）？", dim: "D" },
-    { text: "9. 你的猫是否表现出明显的支配欲或霸道？", dim: "D" },
-    { text: "10. 你的猫是否偶尔做出难以预料的突发举动？", dim: "I" }, // Impulsiveness
-    { text: "11. 你的猫在兴奋时是否显得有些鲁莽？", dim: "I" },
+    { text: "1. 你的猫是否容易被突然的声音吓到？", dim: "N" }, // Neuroticism (神经质)
+    { text: "2. 你的猫在陌生人面前是否表现得非常害羞？", dim: "N" },
+    { text: "3. 你的猫是否经常显得紧张或不安？", dim: "N" },
+    { text: "4. 你的猫是否热衷于探索家里新出现的物品？", dim: "E" }, // Extraversion (外向性)
+    { text: "5. 你的猫是否表现得非常聪明、有主见？", dim: "E" },
+    { text: "6. 你的猫在玩耍时是否非常活跃？", dim: "E" },
+    { text: "7. 在多猫环境下，它是否会驱赶或欺负别的猫？", dim: "D" }, // Dominance (支配欲)
+    { text: "8. 你的猫在面对食物或地盘时是否表现得很强势？", dim: "D" },
+    { text: "9. 你的猫是否表现出明显的支配欲？", dim: "D" },
+    { text: "10. 你的猫是否偶尔做出难以预料的突发举动？", dim: "I" }, // Impulsiveness (冲动性)
+    { text: "11. 你的猫在行为上是否显得有些鲁莽？", dim: "I" },
     { text: "12. 你的猫是否情绪起伏较大（反复无常）？", dim: "I" },
-    { text: "13. 你的猫是否经常主动向你寻求抚摸或亲近？", dim: "A" }, // Agreeableness
-    { text: "14. 你的猫在与人互动时是否表现得非常温柔？", dim: "A" },
-    { text: "15. 你的猫是否对家里的成员非常友好？", dim: "A" }
+    { text: "13. 你的猫是否经常主动向你寻求抚摸或陪伴？", dim: "A" }, // Agreeableness (宜人性)
+    { text: "14. 你的猫在与人互动时是否表现得非常温顺？", dim: "A" },
+    { text: "15. 你的猫是否对家庭成员表现得非常友好？", dim: "A" }
 ];
 
 let currentIdx = 0;
@@ -64,9 +71,9 @@ function initQuiz() {
         const div = document.createElement('div');
         div.className = `question ${i === 0 ? 'active' : ''}`;
         div.id = `q${i}`;
-        div.innerHTML = `<p>${q.text}</p><div class="options">` +
+        div.innerHTML = `<p style="font-weight:500;">${q.text}</p><div class="options">` +
             [1, 4, 7].map(val => {
-                let label = val === 1 ? '完全不是' : (val === 4 ? '偶尔是' : '非常符合');
+                let label = val === 1 ? '基本不符合' : (val === 4 ? '偶尔符合' : '非常符合');
                 return `<button onclick="handleAnswer('${q.dim}', ${val})">${label}</button>`;
             }).join('') + `</div>`;
         container.appendChild(div);
@@ -96,30 +103,34 @@ function showResult() {
         scores.A / counts.A
     ];
 
-    // 渲染雷达图
     const ctx = document.getElementById('radarChart').getContext('2d');
     new Chart(ctx, {
         type: 'radar',
         data: {
             labels: ['神经质', '外向性', '支配欲', '冲动性', '宜人性'],
             datasets: [{
-                label: '性格轮廓',
+                label: '人格得分 (1-7)',
                 data: finalScores,
-                backgroundColor: 'rgba(92, 107, 192, 0.2)',
-                borderColor: '#5c6bc0',
-                pointBackgroundColor: '#5c6bc0'
+                backgroundColor: 'rgba(69, 90, 100, 0.15)',
+                borderColor: '#455a64',
+                pointBackgroundColor: '#455a64',
+                borderWidth: 2
             }]
         },
-        options: { scales: { r: { min: 0, max: 7, ticks: { stepSize: 1 } } } }
+        options: {
+            scales: { r: { min: 0, max: 7, ticks: { display: false }, grid: { color: '#eee' } } },
+            plugins: { legend: { display: false } }
+        }
     });
 
-    // 生成动态建议 [cite: 279, 282, 286, 296, 299]
-    let advice = "<strong>万相喵专家解读：</strong><br>";
-    if (finalScores[0] > 5) advice += "• 敏感型：它需要更多躲避空间，建议使用纯净无味的木浆猫抓板，营造安全感。<br>";
-    if (finalScores[1] > 5) advice += "• 探索型：聪明的它需要更多脑力游戏，建议通过漏食玩具或环境富集防止无聊。<br>";
-    if (finalScores[2] > 5) advice += "• 领地型：多猫家庭请确保资源分散，避免它守住唯一的出入口。<br>";
-    if (finalScores[4] < 3) advice += "• 警示：若原本温顺的猫突然宜人性降低，请注意排查身体疼痛或疾病风险。<br>";
-    if (advice === "<strong>万相喵专家解读：</strong><br>") advice += "• 均衡型：你的猫咪性格非常稳定，继续保持现有的科学养护习惯吧！";
+    let advice = "<strong>研究结论与建议：</strong><br><br>";
+    if (finalScores[0] > 5) advice += "• <strong>高神经质</strong>：猫咪对环境高度敏感，建议提供更多隐蔽的角落（如猫窝或纸箱），减少突发环境干扰。<br><br>";
+    if (finalScores[1] > 5) advice += "• <strong>高外向性</strong>：猫咪聪明好奇，需要更复杂的环境富集（如益智玩具或互动游戏）来避免无聊。<br><br>";
+    if (finalScores[2] > 5) advice += "• <strong>高支配欲</strong>：在多猫家庭中，需确保充足的资源分配，避免猫咪因领地或食物产生竞争压力。<br><br>";
+    if (finalScores[3] > 5) advice += "• <strong>高冲动性</strong>：若猫咪行为极度鲁莽，需排查环境中是否存在隐性压力源。<br><br>";
+    if (finalScores[4] < 3) advice += "• <strong>低宜人性</strong>：警惕猫咪性格的突然转变，宜人性降低有时是身体疼痛或潜在疾病的信号。";
+    
+    if (advice === "<strong>研究结论与建议：</strong><br><br>") advice += "• <strong>各维度均衡</strong>：猫咪性格稳定。请继续保持科学的日常观察，并根据环境变化适时调整养护方式。";
     
     document.getElementById('advice').innerHTML = advice;
 }
