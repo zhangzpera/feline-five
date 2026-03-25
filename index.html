@@ -26,8 +26,7 @@
 
 <div class="container">
     <h1>猫咪行为与人格科学测评</h1>
-    <div id="quiz-container">
-        </div>
+    <div id="quiz-container"></div>
     
     <div id="result">
         <h3>测评结果：猫咪人格维度图</h3>
@@ -35,28 +34,27 @@
         <div id="advice" class="advice-box"></div>
         <button onclick="location.reload()" style="margin-top:20px; width:100%; background:var(--primary); color:#fff;">重新开始测评</button>
         <div class="source-ref">
-            数据来源：Litchfield 等 (2017) 《“猫咪五大人格”：宠物猫人格探索》<br>
-            基于 2,802 只宠物猫的样本研究确立
+            数据来源：Litchfield 等 (2017) 《“猫咪五大人格”：宠物猫人格探索》[cite: 10]<br>
+            基于 2,802 只宠物猫的样本研究确立 [cite: 24]
         </div>
     </div>
 </div>
 
 <script>
-// 基于论文中提到的 52 项特质精选的 15 道代表性题目
 const questions = [
-    { text: "1. 你的猫是否容易被突然的声音吓到？", dim: "N" }, // Neuroticism (神经质)
+    { text: "1. 你的猫是否容易被突然的声音吓到？", dim: "N" },
     { text: "2. 你的猫在陌生人面前是否表现得非常害羞？", dim: "N" },
     { text: "3. 你的猫是否经常显得紧张或不安？", dim: "N" },
-    { text: "4. 你的猫是否热衷于探索家里新出现的物品？", dim: "E" }, // Extraversion (外向性)
+    { text: "4. 你的猫是否热衷于探索家里新出现的物品？", dim: "E" },
     { text: "5. 你的猫是否表现得非常聪明、有主见？", dim: "E" },
     { text: "6. 你的猫在玩耍时是否非常活跃？", dim: "E" },
-    { text: "7. 在多猫环境下，它是否会驱赶或欺负别的猫？", dim: "D" }, // Dominance (支配欲)
+    { text: "7. 在多猫环境下，它是否会驱赶或欺负别的猫？", dim: "D" },
     { text: "8. 你的猫在面对食物或地盘时是否表现得很强势？", dim: "D" },
     { text: "9. 你的猫是否表现出明显的支配欲？", dim: "D" },
-    { text: "10. 你的猫是否偶尔做出难以预料的突发举动？", dim: "I" }, // Impulsiveness (冲动性)
+    { text: "10. 你的猫是否偶尔做出难以预料的突发举动？", dim: "I" },
     { text: "11. 你的猫在行为上是否显得有些鲁莽？", dim: "I" },
-    { text: "12. 你的猫是否情绪起伏较大（反复无常）？", dim: "I" },
-    { text: "13. 你的猫是否经常主动向你寻求抚摸或陪伴？", dim: "A" }, // Agreeableness (宜人性)
+    { text: "12. 你的猫是否情绪起伏较大？", dim: "I" },
+    { text: "13. 你的猫是否经常主动向你寻求抚摸或陪伴？", dim: "A" },
     { text: "14. 你的猫在与人互动时是否表现得非常温顺？", dim: "A" },
     { text: "15. 你的猫是否对家庭成员表现得非常友好？", dim: "A" }
 ];
@@ -109,7 +107,6 @@ function showResult() {
         data: {
             labels: ['神经质', '外向性', '支配欲', '冲动性', '宜人性'],
             datasets: [{
-                label: '人格得分 (1-7)',
                 data: finalScores,
                 backgroundColor: 'rgba(69, 90, 100, 0.15)',
                 borderColor: '#455a64',
@@ -118,19 +115,19 @@ function showResult() {
             }]
         },
         options: {
-            scales: { r: { min: 0, max: 7, ticks: { display: false }, grid: { color: '#eee' } } },
+            scales: { r: { min: 0, max: 7, ticks: { display: false } } },
             plugins: { legend: { display: false } }
         }
     });
 
-    let advice = "<strong>研究结论与建议：</strong><br><br>";
-    if (finalScores[0] > 5) advice += "• <strong>高神经质</strong>：猫咪对环境高度敏感，建议提供更多隐蔽的角落（如猫窝或纸箱），减少突发环境干扰。<br><br>";
-    if (finalScores[1] > 5) advice += "• <strong>高外向性</strong>：猫咪聪明好奇，需要更复杂的环境富集（如益智玩具或互动游戏）来避免无聊。<br><br>";
-    if (finalScores[2] > 5) advice += "• <strong>高支配欲</strong>：在多猫家庭中，需确保充足的资源分配，避免猫咪因领地或食物产生竞争压力。<br><br>";
-    if (finalScores[3] > 5) advice += "• <strong>高冲动性</strong>：若猫咪行为极度鲁莽，需排查环境中是否存在隐性压力源。<br><br>";
-    if (finalScores[4] < 3) advice += "• <strong>低宜人性</strong>：警惕猫咪性格的突然转变，宜人性降低有时是身体疼痛或潜在疾病的信号。";
+    let advice = "<strong>根据学术研究结论的参考建议：</strong><br><br>";
+    if (finalScores[0] > 5) advice += "• <strong>高神经质</strong>：猫咪可能表现出不安全感或焦虑 [cite: 263]。建议提供更多躲避空间（如静谧的猫窝或高处）以减轻压力 [cite: 282, 283]。<br><br>";
+    if (finalScores[1] > 5) advice += "• <strong>高外向性</strong>：猫咪通常聪明且好奇 [cite: 286]。建议通过环境富集和互动游戏来满足其探索欲望 [cite: 286]。<br><br>";
+    if (finalScores[2] > 5) advice += "• <strong>高支配欲</strong>：猫咪可能对其他猫表现出攻击性或欺凌行为 [cite: 299]。在多猫家庭中需注意资源分配，减少竞争摩擦 [cite: 299]。<br><br>";
+    if (finalScores[3] > 5) advice += "• <strong>高冲动性</strong>：猫咪行为可能反复无常或鲁莽 [cite: 264]。建议评估环境中的潜在压力源并寻求规律化的作息 [cite: 288, 289]。<br><br>";
+    if (finalScores[4] < 3) advice += "• <strong>低宜人性</strong>：可能表现为烦躁或攻击性 [cite: 296]。若性格发生突变，应警惕潜在的身体疼痛或疾病风险 [cite: 27, 296]。";
     
-    if (advice === "<strong>研究结论与建议：</strong><br><br>") advice += "• <strong>各维度均衡</strong>：猫咪性格稳定。请继续保持科学的日常观察，并根据环境变化适时调整养护方式。";
+    if (advice.length < 50) advice += "• <strong>平衡型</strong>：猫咪性格各项指标较为均衡。请继续通过日常观察来维护其身心福祉。";
     
     document.getElementById('advice').innerHTML = advice;
 }
