@@ -35,7 +35,7 @@
         <button onclick="location.reload()" style="margin-top:20px; width:100%; background:var(--primary); color:#fff;">重新开始测评</button>
         <div class="source-ref">
             数据来源：Litchfield 等 (2017) 《“猫咪五大人格”：宠物猫人格探索》[cite: 10]<br>
-            基于 2,802 只宠物猫的样本研究确立 [cite: 24]
+            基于 2,802 只宠物猫的样本研究确立 
         </div>
     </div>
 </div>
@@ -120,16 +120,16 @@ function showResult() {
         }
     });
 
-    let advice = "<strong>根据学术研究结论的参考建议：</strong><br><br>";
-    if (finalScores[0] > 5) advice += "• <strong>高神经质</strong>：猫咪可能表现出不安全感或焦虑 [cite: 263]。建议提供更多躲避空间（如静谧的猫窝或高处）以减轻压力 [cite: 282, 283]。<br><br>";
-    if (finalScores[1] > 5) advice += "• <strong>高外向性</strong>：猫咪通常聪明且好奇 [cite: 286]。建议通过环境富集和互动游戏来满足其探索欲望 [cite: 286]。<br><br>";
-    if (finalScores[2] > 5) advice += "• <strong>高支配欲</strong>：猫咪可能对其他猫表现出攻击性或欺凌行为 [cite: 299]。在多猫家庭中需注意资源分配，减少竞争摩擦 [cite: 299]。<br><br>";
-    if (finalScores[3] > 5) advice += "• <strong>高冲动性</strong>：猫咪行为可能反复无常或鲁莽 [cite: 264]。建议评估环境中的潜在压力源并寻求规律化的作息 [cite: 288, 289]。<br><br>";
-    if (finalScores[4] < 3) advice += "• <strong>低宜人性</strong>：可能表现为烦躁或攻击性 [cite: 296]。若性格发生突变，应警惕潜在的身体疼痛或疾病风险 [cite: 27, 296]。";
+    let adviceText = "<strong>测评报告与养护参考：</strong><br><br>";
+    if (finalScores[0] > 5) adviceText += "• <strong>高神经质 (Neuroticism)</strong>：猫咪可能表现出不安全感或焦虑 [cite: 263]。建议通过提供更多躲避空间（如静谧的猫窝或高处）来减轻其环境压力 [cite: 283]。<br><br>";
+    if (finalScores[1] > 5) adviceText += "• <strong>高外向性 (Extraversion)</strong>：猫咪通常表现得非常聪明、有好奇心 [cite: 286]。建议通过丰富的环境富集和互动游戏来满足其探索欲望 [cite: 286]。<br><br>";
+    if (finalScores[2] > 5) adviceText += "• <strong>高支配欲 (Dominance)</strong>：在多猫家庭中，猫咪可能表现出对其他猫的欺凌行为 [cite: 299]。需确保充足的资源分配（如食物、水、猫砂盆等）以减少竞争摩擦 [cite: 299]。<br><br>";
+    if (finalScores[3] > 5) adviceText += "• <strong>高冲动性 (Impulsiveness)</strong>：行为可能表现得反复无常或鲁莽 [cite: 264]。建议评估环境中的压力源，并尝试建立规律化的日常生活 [cite: 288, 289]。<br><br>";
+    if (finalScores[4] < 3) adviceText += "• <strong>低宜人性 (Agreeableness)</strong>：可能表现为烦躁或攻击性 [cite: 296]。若性格发生突然转变，应警惕潜在的身体疼痛、不适或疾病风险 [cite: 296]。";
     
-    if (advice.length < 50) advice += "• <strong>平衡型</strong>：猫咪性格各项指标较为均衡。请继续通过日常观察来维护其身心福祉。";
+    if (adviceText.length < 50) adviceText += "• <strong>平衡型</strong>：猫咪在各人格维度上的得分较为均衡。请继续保持日常观察，并根据其具体行为变化适时微调养护方式。";
     
-    document.getElementById('advice').innerHTML = advice;
+    document.getElementById('advice').innerHTML = adviceText;
 }
 
 initQuiz();
